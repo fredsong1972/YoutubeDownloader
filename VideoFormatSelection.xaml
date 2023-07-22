@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:YoutubeDownloader" Title="Youtube Downloader"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:progressBar="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
+             xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             x:Name="youtubeView"
+             x:Class="YoutubeDownloader.VideoFormatSelection">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <OnPlatform x:TypeArguments="x:String" x:Key="ListViewFontIconFamily">
+                <On Platform="Android" Value="ListViewFontIcons.ttf#ListViewFontIcons"/>
+                <On Platform="iOS" Value="ListViewFontIcons" />
+                <On Platform="MacCatalyst" Value="ListViewFontIcons" />
+                <On Platform="WinUI" Value="ListViewFontIcons.ttf#ListViewFontIcons"/>
+            </OnPlatform>
+            <local:IconColorConverter x:Key="IconColorConverter"/>
+            <local:SelectionIconConverter x:Key="SelectionIconConverter"/>
+
+            <Style TargetType="Label" x:Key="PopupContentLabelStyle">
+                <Setter Property="TextColor" Value="#49454E"/>
+                <Setter Property="FontFamily" Value="Roboto-Regular"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="CharacterSpacing" Value="0.24"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <local:VideoFormatListViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    <Grid Margin="0" RowSpacing="0" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="headerGrid"  Grid.Row="0" MaximumHeightRequest="100"  Margin="16,16,16,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Entry Placeholder="Paste your Url here" TextColor="#E3000000"
+                       Text="{Binding VideoUrl}" WidthRequest="500" FontFamily="OpenSans-Regular"
+                       FontSize="16"  HorizontalOptions="Start" VerticalOptions="Center" Margin="0,0,30,0"/>
+            <Button Text="Get Video"
+                    Grid.Column="1"
+                    Command="{Binding GetVideoCommand}"
+                    WidthRequest="100"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center" />
+
+            <Label TextColor="#E3000000" Grid.Row="1" Grid.ColumnSpan="2"
+                       Text="{Binding VideoTitle}" FontFamily="OpenSans-Semibold"
+                       FontSize="16"  Padding="0,16,0,16" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+        </Grid>
+
+        <StackLayout Grid.Row="1" Background="Black" IsVisible="{Binding ShowThumbnail}">
+            <Image HeightRequest="180" Source="{Binding VideoThumbnail.Url}" />
+            <Label
+                        Margin="0,0,8,6"
+                        Padding="2"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                        Background="Black"
+                        TextColor="LightGray"
+                        Text="{Binding VideoDuration}" />
+        </StackLayout>
+
+        <progressBar:SfLinearProgressBar x:Name="IndeterminateProgressBar" Grid.Row="2" IsVisible="{Binding IsBusy}"  IsIndeterminate="True" />
+
+        <progressBar:SfCircularProgressBar x:Name="TrackInsideProgressBar"
+                                            Grid.Row="2"
+                                            IsVisible="{Binding IsDownloading}"
+                                            AnimationDuration="0"
+                                            TrackRadiusFactor="0.8"
+                                            TrackThickness="50">
+
+            <progressBar:SfCircularProgressBar.Content>
+                <StackLayout>
+                    <Label x:Name="TrackInsideProgressBarProgressLabel"
+                                           TextColor="#FF512BD4"
+                                           Text="{Binding ProgressReport}"
+                                           HorizontalOptions="CenterAndExpand"
+                                           VerticalOptions="CenterAndExpand"
+                                           HeightRequest="45"
+                                           WidthRequest="60"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center">
+                    </Label>
+                </StackLayout>
+            </progressBar:SfCircularProgressBar.Content>
+        </progressBar:SfCircularProgressBar>
+
+        <syncfusion:SfListView x:Name="listView"
+                        Grid.Row="4"
+                        ScrollBarVisibility="Default"
+                        SelectionGesture="Tap"
+                        SelectionMode="Single"
+                        ItemSize="72"
+                        IsStickyHeader="True" 
+                        ItemsSource="{Binding Videos}">
+            <syncfusion:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Grid.Row="0"  x:Name="grid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="72" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="1" VerticalOptions="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label LineBreakMode="TailTruncation"
+                                   TextColor="#DE000000"
+                                   Text="{Binding Title}" 
+                                   FontFamily="Roboto-Regular"
+                                   CharacterSpacing="0.15"
+                                   FontSize="{OnPlatform Default=16,WinUI=14}" />
+
+                            <Label Grid.Column="1" LineBreakMode="TailTruncation"
+                                   TextColor="#DE000000"
+                                   Text="{Binding Resolution}" 
+                                   FontFamily="Roboto-Regular"
+                                   CharacterSpacing="0.15"
+                                   Padding="32,0,0,0"
+                                   FontSize="{OnPlatform Default=16,WinUI=14}" />
+
+                            <Label Grid.Column="2" LineBreakMode="TailTruncation"
+                                   TextColor="#DE000000"
+                                   Text="{Binding VideoLength}" 
+                                   FontFamily="Roboto-Regular"
+                                   CharacterSpacing="0.15"
+                                   Padding="32,0,0,0"
+                                   FontSize="{OnPlatform Default=16,WinUI=14}" />
+
+                            <Label Grid.Column="3" LineBreakMode="TailTruncation"
+                                   TextColor="#DE000000"
+                                   Text="{Binding Duration}" 
+                                   FontFamily="Roboto-Regular"
+                                   CharacterSpacing="0.15"
+                                   Padding="32,0,0,0"
+                                   FontSize="{OnPlatform Default=16,WinUI=14}" />
+
+                            <Label Grid.Column="4" LineBreakMode="TailTruncation"
+                                   TextColor="#DE000000"
+                                   Text="{Binding Format}" 
+                                   FontFamily="Roboto-Regular"
+                                   CharacterSpacing="0.15"
+                                   Padding="32,0,0,0"
+                                   FontSize="{OnPlatform Default=16,WinUI=14}" />
+
+                            <Label Grid.Row="1" TextColor="#99000000" 
+                                       Grid.Column="0"
+                                       LineBreakMode="NoWrap"                               
+                                       FontFamily="Roboto-Regular"
+                                       CharacterSpacing="0.25"
+                                       Text="{Binding VideoSize}"
+                                       Margin="0,2,0,0"
+                                       FontSize="14" />
+
+                        </Grid>
+                        <Button Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,16,0"
+                           Text="Download"
+                           WidthRequest="100"
+                           Command="{Binding Source={RelativeSource AncestorType={x:Type local:VideoFormatListViewModel}}, Path=DownloadCommand}"
+                           CommandParameter="{Binding }" />
+                    </Grid>
+                </DataTemplate>
+            </syncfusion:SfListView.ItemTemplate>
+        </syncfusion:SfListView>
+
+        <popup:SfPopup x:Name="notification" Grid.Row ="3" ShowOverlayAlways="True" IsVisible="{Binding IsPopupOpen}" IsOpen="{Binding IsPopupOpen}"
+                       WidthRequest="360" HeightRequest="200" HeaderHeight="80" 
+                       AbsoluteX="{OnPlatform WinUI=200,MacCatalyst=200}" AbsoluteY="{OnPlatform WinUI=100,MacCatalyst=100}" 
+                       RelativeView="{OnPlatform MacCatalyst={x:Reference listView}, WinUI={x:Reference listView}}">
+            <popup:SfPopup.PopupStyle>
+                <popup:PopupStyle CornerRadius="12" HasShadow="True" MessageBackground="#FFFFFF" HeaderBackground="#FFFFFF"/>
+            </popup:SfPopup.PopupStyle>
+
+            <popup:SfPopup.HeaderTemplate>
+                <DataTemplate>
+                    <Grid ColumnSpacing="12" Padding="8,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="&#xe700;" FontFamily="{OnPlatform iOS=PopupFontIcons, MacCatalyst=PopupFontIcons, Android=PopupFontIcons.ttf#, WinUI=PopupFontIcons.ttf#PopupFontIcons}"
+                                   FontSize="24" TextColor="#006E2C" VerticalTextAlignment="Center"/>
+                        <Label Grid.Column="1" Text="Success!" FontSize="16" FontFamily="Roboto-Regular" TextColor="#006E2C"
+                                   VerticalTextAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </popup:SfPopup.HeaderTemplate>
+
+            <popup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackLayout BackgroundColor="#C4C7C5" HeightRequest="1"/>
+                        <Label Grid.Row="1" Padding="24,0" Text="{Binding DownloadedMessage}" LineBreakMode="WordWrap"
+                                   Style="{StaticResource PopupContentLabelStyle}" Margin="0,24,0,0"/>
+                    </Grid>
+                </DataTemplate>
+            </popup:SfPopup.ContentTemplate>
+        </popup:SfPopup>
+    </Grid>
+
+</ContentPage>

@@ -8,7 +8,7 @@
 
 
 
-    <ShellContent Title = "Youtube Downloader" ContentTemplate = "{DataTemplate local:VideoFormatSelection}" Route ="VideoFormatSelection" /> 
+    <ShellContent Title = "Tube Video Downloader" ContentTemplate = "{DataTemplate local:VideoFormatSelection}" Route ="VideoFormatSelection" /> 
 
 
 </Shell>

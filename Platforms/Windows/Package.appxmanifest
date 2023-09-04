@@ -6,10 +6,10 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-	<Identity Name="40972FredSong.FastYoutubeDownloader" Publisher="CN=3DC3F032-5EAD-46A3-859C-18BDC5EA8C2F" Version="1.1.2.0" />
+	<Identity Name="40972FredSong.FastYoutubeDownloader" Publisher="CN=3DC3F032-5EAD-46A3-859C-18BDC5EA8C2F" Version="1.1.6.0" />
 
 	<Properties>
-		<DisplayName>FastYoutubeDownloader</DisplayName>
+		<DisplayName>TubeVideoDownloader</DisplayName>
 		<PublisherDisplayName>Fred Song</PublisherDisplayName>
 		<Logo>$placeholder$.png</Logo>
 	</Properties>
@@ -26,7 +26,7 @@
 	<Applications>
 		<Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
 			<uap:VisualElements
-			  DisplayName="FastYoutubeDownloader"
+			  DisplayName="Tube Video Downloader"
 			  Description="$placeholder$"
 			  Square150x150Logo="$placeholder$.png"
 			  Square44x44Logo="$placeholder$.png"

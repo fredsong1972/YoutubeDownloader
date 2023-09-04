@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:YoutubeDownloader" Title="Youtube Downloader"
+             xmlns:local="clr-namespace:YoutubeDownloader" Title="Tube Video Downloader"
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              xmlns:progressBar="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
              xmlns:popup="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
@@ -46,7 +46,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Entry Placeholder="Paste your Url here" TextColor="#E3000000"
+            <Entry Placeholder="Paste youtube url here" TextColor="#E3000000"
                        Text="{Binding VideoUrl}" WidthRequest="500" FontFamily="OpenSans-Regular"
                        FontSize="16"  HorizontalOptions="Start" VerticalOptions="Center" Margin="0,0,30,0"/>
             <Button Text="Get Video"

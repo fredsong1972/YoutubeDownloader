@@ -36,6 +36,9 @@
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 		<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
 		<Title>Tube Video Downloader</Title>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<PackageCertificateKeyFile>YoutubeDownloader_TemporaryKey.pfx</PackageCertificateKeyFile>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -79,7 +82,8 @@
     <PackageReference Include="Syncfusion.Maui.Core" Version="22.1.37" />
     <PackageReference Include="Syncfusion.Maui.Popup" Version="22.1.37" />
     <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="22.1.37" />
-    <PackageReference Include="YoutubeExplode" Version="6.2.16" />
+    <PackageReference Include="YoutubeExplode" Version="6.4.3" />
+    <PackageReference Include="YoutubeExplode.Converter" Version="6.4.3" />
    </ItemGroup>
 	
 	 <ItemGroup>

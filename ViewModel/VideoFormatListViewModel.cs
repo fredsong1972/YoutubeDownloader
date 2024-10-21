@@ -11,6 +11,8 @@ using System.Windows.Input;
 using YoutubeDownloader.Model;
 using YoutubeExplode;
 using YoutubeExplode.Common;
+using YoutubeExplode.Videos.Streams;
+using YoutubeExplode.Converter;
 
 namespace YoutubeDownloader
 {
@@ -53,10 +55,16 @@ namespace YoutubeDownloader
                         VideoThumbnail = video.Thumbnails.GetWithHighestResolution();
                         VideoDuration = video.Duration?.ToString() ?? string.Empty;
                         var streamManifest = await _youtube.Videos.Streams.GetManifestAsync(_videoUrl);
-                        var muxedStreamInfos = streamManifest
-                        .GetMuxedStreams()
-                        .OrderByDescending(s => s.VideoQuality)
-                        .ToList();
+                        var audioStreamInfo = streamManifest
+                        .GetAudioStreams()
+                       .Where(s => s.Container.Name == "mp4")
+                       .GetWithHighestBitrate();
+
+                        var videoStreamInfos = streamManifest
+                       .GetVideoStreams()
+                       .Where(s => s.Container.Name == "mp4" && s.VideoCodec.StartsWith("avc1"))
+                       .OrderByDescending(s => s.VideoQuality)
+                       .ToList();
 
                         VideoTitle = video.Title;
                         if (!string.IsNullOrWhiteSpace(VideoThumbnail?.Url))
@@ -64,7 +72,7 @@ namespace YoutubeDownloader
                             ShowThumbnail = true;
                         }
 
-                        foreach (var streamInfo in muxedStreamInfos)
+                        foreach (var streamInfo in videoStreamInfos)
                         {
                             try
                             {
@@ -74,7 +82,8 @@ namespace YoutubeDownloader
                                     VideoSize = $"{streamInfo.Size.MegaBytes: 0.00} MB",
                                     Resolution = streamInfo.VideoQuality.Label,
                                     Format = streamInfo.Container.Name,
-                                    VideoStream = streamInfo
+                                    VideoStream = streamInfo,
+                                    AudioStream = audioStreamInfo
                                 };
 
                                 videos.Add(videoInfo);
@@ -120,7 +129,10 @@ namespace YoutubeDownloader
                             var progressHandler = new Progress<double>(p => Progress = p);
 
                             // Download to file
-                            await _youtube.Videos.Streams.DownloadAsync(video.VideoStream, filePath, progressHandler);
+                            var streamInfos = new IStreamInfo[] { video.AudioStream, video.VideoStream };
+                            var builder = new ConversionRequestBuilder(filePath);
+                            builder.SetFFmpegPath("c:\\FFmeg\\ffmpeg.exe");
+                            await _youtube.Videos.DownloadAsync(streamInfos, builder.Build(), progressHandler);
                             DownloadedMessage = $"{fileName} is saved to {path} .";
                         });
                     }

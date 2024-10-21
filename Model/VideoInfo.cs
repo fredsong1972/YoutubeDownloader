@@ -13,6 +13,7 @@ namespace YoutubeDownloader.Model
         private string _format;
 
         private IStreamInfo _videoStream;
+        private IStreamInfo _audioStream;
 
         #endregion
         public string Title 
@@ -100,9 +101,25 @@ namespace YoutubeDownloader.Model
             }
         }
 
-       
+        public IStreamInfo AudioStream
+        {
+            get
+            {
+                return _audioStream;
+            }
+
+            set
+            {
+                if (_audioStream != value)
+                {
+                    _audioStream = value;
+                }
+            }
+        }
+
+
         #region INotifyPropertyChanged implementation
-                
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChanged(String name)

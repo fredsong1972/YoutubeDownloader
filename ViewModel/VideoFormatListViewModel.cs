@@ -94,6 +94,14 @@ namespace YoutubeDownloader
                                 continue;
                             }
                         }
+                        videos.Add(new VideoInfo
+                        {
+                            Title = video.Title,
+                            VideoSize = $"{audioStreamInfo.Size.MegaBytes: 0.00} MB",
+                            Resolution = "Audio",
+                            Format = audioStreamInfo.Container.Name,
+                            VideoStream = audioStreamInfo
+                        });
                     });
 
                     Videos = videos;
@@ -129,10 +137,21 @@ namespace YoutubeDownloader
                             var progressHandler = new Progress<double>(p => Progress = p);
 
                             // Download to file
-                            var streamInfos = new IStreamInfo[] { video.AudioStream, video.VideoStream };
-                            var builder = new ConversionRequestBuilder(filePath);
-                            builder.SetFFmpegPath("c:\\FFmeg\\ffmpeg.exe");
-                            await _youtube.Videos.DownloadAsync(streamInfos, builder.Build(), progressHandler);
+                            if (video.VideoStream != null && video.AudioStream != null)
+                            {
+                                var streamInfos = new IStreamInfo[] { video.AudioStream, video.VideoStream };
+                                var builder = new ConversionRequestBuilder(filePath);
+                                if (DeviceInfo.Platform == DevicePlatform.WinUI)
+                                {
+                                    builder.SetFFmpegPath("Platforms\\Windows\\ffmpeg.exe");
+                                }
+
+                                await _youtube.Videos.DownloadAsync(streamInfos, builder.Build(), progressHandler);
+                            }
+                            else if (video.AudioStream == null)
+                            {
+                                await _youtube.Videos.Streams.DownloadAsync(video.VideoStream, filePath, progressHandler);
+                            }
                             DownloadedMessage = $"{fileName} is saved to {path} .";
                         });
                     }
@@ -326,7 +345,7 @@ namespace YoutubeDownloader
                 if (value != _downloadedMessage)
                 {
                     _downloadedMessage = value;
-                    OnPropertyChanged(nameof(DownloadedMessage));  
+                    OnPropertyChanged(nameof(DownloadedMessage));
                 }
             }
         }

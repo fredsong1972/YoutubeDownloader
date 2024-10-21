@@ -6,7 +6,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-	<Identity Name="40972FredSong.FastYoutubeDownloader" Publisher="CN=FredSong" Version="1.1.6.0" />
+	<Identity Name="40972FredSong.FastYoutubeDownloader" Publisher="CN=FredSong" Version="1.2.0.0" />
 
 	<Properties>
 		<DisplayName>TubeVideoDownloader</DisplayName>

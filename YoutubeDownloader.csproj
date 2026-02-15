@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+	  <TargetFrameworks>net9.0-android;net9.0-windows10.0.19041.0</TargetFrameworks>
+	  <!-- Add Apple targets only when the build host is macOS -->
+	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+		  $(TargetFrameworks);net9.0-ios;net9.0-maccatalyst
+	  </TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
     <OutputType>Exe</OutputType>
@@ -34,6 +37,9 @@
     <PackageCertificateKeyFile>YoutubeDownloader_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.19041.0</SupportedOSPlatformVersion>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
   </PropertyGroup>
   <ItemGroup>
     <!-- App Icon -->
@@ -54,9 +60,9 @@
     <None Remove="Resources\Fonts\Roboto-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
   </ItemGroup>
   <!-- pdf -->
   <ItemGroup>
@@ -68,8 +74,8 @@
     <PackageReference Include="Syncfusion.Maui.Core" Version="27.1.53" />
     <PackageReference Include="Syncfusion.Maui.Popup" Version="27.1.53" />
     <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.1.53" />
-    <PackageReference Include="YoutubeExplode" Version="6.5.3" />
-    <PackageReference Include="YoutubeExplode.Converter" Version="6.5.3" />
+    <PackageReference Include="YoutubeExplode" Version="6.5.7" />
+    <PackageReference Include="YoutubeExplode.Converter" Version="6.5.6" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="VideoFormatSelection.xaml.cs">
@@ -79,6 +85,9 @@
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Resources\Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <MauiSplashScreen Include="Resources\Splash\splashscreen.png" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Platforms\Windows\ffmpeg.exe">

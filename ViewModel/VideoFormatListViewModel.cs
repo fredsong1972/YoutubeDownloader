@@ -106,6 +106,10 @@ namespace YoutubeDownloader
 
                     Videos = videos;
                 }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
                 finally
                 {
                     IsBusy = false;

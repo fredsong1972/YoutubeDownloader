@@ -79,7 +79,7 @@ namespace YoutubeDownloader
                                 var videoInfo = new VideoInfo
                                 {
                                     Title = video.Title,
-                                    VideoSize = $"{streamInfo.Size.MegaBytes: 0.00} MB",
+                                    VideoSize = $"{(streamInfo.Size.MegaBytes + audioStreamInfo?.Size.MegaBytes ?? 0): 0.00} MB",
                                     Resolution = streamInfo.VideoQuality.Label,
                                     Format = streamInfo.Container.Name,
                                     VideoStream = streamInfo,
